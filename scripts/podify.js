@@ -181,16 +181,15 @@ module.exports = function (context) {
             }
             podfileContents.push('end');
 
-            podfileContents.push('end');
 
             //fixed cocoapod sign issue
             //https://michiganlabs.com/ios/development/2015/11/30/code-sign-error-building-cocoapods-framework-targets/
-            podfileContents.push('post_install do |installer|');
+            podfileContents.push('\npost_install do |installer|');
             podfileContents.push('\tinstaller.pods_project.targets.each do |target|');
             podfileContents.push('\t\ttarget.build_configurations.each do |config|');
-            podfileContents.push('\t\t\tconfig.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""');
-            podfileContents.push('\t\t\tconfig.build_settings['CODE_SIGNING_REQUIRED'] = "NO"');
-            podfileContents.push('\t\t\tconfig.build_settings['CODE_SIGNING_ALLOWED'] = "NO"');
+            podfileContents.push('\t\t\tconfig.build_settings[\'EXPANDED_CODE_SIGN_IDENTITY\'] = ""');
+            podfileContents.push('\t\t\tconfig.build_settings[\'CODE_SIGNING_REQUIRED\'] = "NO"');
+            podfileContents.push('\t\t\tconfig.build_settings[\'CODE_SIGNING_ALLOWED\'] = "NO"');
             podfileContents.push('\t\tend');
             podfileContents.push('\tend');
             podfileContents.push('end');
