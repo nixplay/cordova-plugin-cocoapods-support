@@ -21,10 +21,10 @@ module.exports = function (context) {
     var configParser = getConfigParser(context, configXmlPath);
     var appName = configParser.name();
     var oldMinVersion = configParser.getPreference('pods_ios_min_version', 'ios') ||
-        configParser.getPreference('pods_ios_min_version');
+    configParser.getPreference('pods_ios_min_version');
     var iosMinVersion = configParser.getPreference('deployment-target', 'ios') ||
-        configParser.getPreference('deployment-target') ||
-        oldMinVersion || '7.0';
+    configParser.getPreference('deployment-target') ||
+    oldMinVersion || '7.0';
     var useFrameworks = configParser.getPreference('pods_use_frameworks', 'ios') || configParser.getPreference('pods_use_frameworks') || 'false';
     var podConfigPath = path.join(rootPath, 'platforms', 'ios', '.pods.json');
     var pod, podName;
@@ -48,11 +48,11 @@ module.exports = function (context) {
     console.log('Searching for new pods');
 
     return Q.all(parsePluginXmls())
-        .then(parseConfigXml)
-        .then(createFiles)
-        .then(installPods)
-        .then(fixBundlePaths)
-        .then(updateBuild);
+    .then(parseConfigXml)
+    .then(createFiles)
+    .then(installPods)
+    .then(fixBundlePaths)
+    .then(updateBuild);
 
     function parseConfigXml() {
 
@@ -180,6 +180,21 @@ module.exports = function (context) {
                 podfileContents.push(entry);
             }
             podfileContents.push('end');
+
+            podfileContents.push('end');
+
+            //fixed cocoapod sign issue
+            //https://michiganlabs.com/ios/development/2015/11/30/code-sign-error-building-cocoapods-framework-targets/
+            podfileContents.push('post_install do |installer|');
+            podfileContents.push('\tinstaller.pods_project.targets.each do |target|');
+            podfileContents.push('\t\ttarget.build_configurations.each do |config|');
+            podfileContents.push('\t\t\tconfig.build_settings['EXPANDED_CODE_SIGN_IDENTITY'] = ""');
+            podfileContents.push('\t\t\tconfig.build_settings['CODE_SIGNING_REQUIRED'] = "NO"');
+            podfileContents.push('\t\t\tconfig.build_settings['CODE_SIGNING_ALLOWED'] = "NO"');
+            podfileContents.push('\t\tend');
+            podfileContents.push('\tend');
+            podfileContents.push('end');
+
             fs.writeFileSync('platforms/ios/Podfile', podfileContents.join('\n'));
 
             var debugXcContents = fs.readFileSync('platforms/ios/cordova/build-debug.xcconfig', 'utf8');
@@ -273,9 +288,9 @@ module.exports = function (context) {
             var xcodeprojRegex = /\.xcodeproj/g;
             var xcodeprojFix = '.xcworkspace';
             var fixedBuildContent = buildContent
-                .replace(targetRegex, targetFix)
-                .replace(projectRegex, projectFix)
-                .replace(xcodeprojRegex, xcodeprojFix);
+            .replace(targetRegex, targetFix)
+            .replace(projectRegex, projectFix)
+            .replace(xcodeprojRegex, xcodeprojFix);
 
             fs.writeFileSync('platforms/ios/cordova/lib/build.js', fixedBuildContent);
 
@@ -302,8 +317,8 @@ module.exports = function (context) {
 
     function fixSwiftLegacy(shouldRun) {
         var directories = getDirectories(path.join(__dirname + '/../../../platforms/ios/Pods/Target Support Files')),
-            podXcContents,
-            SWIFT_VERSION_REGX = /SWIFT_VERSION=(?:\d*\.)\d/g;
+        podXcContents,
+        SWIFT_VERSION_REGX = /SWIFT_VERSION=(?:\d*\.)\d/g;
         if (useLegacy) {
             for (var i = 0; i < directories.length; i++) {
                 if (directories[i].indexOf(appName) === -1) {
