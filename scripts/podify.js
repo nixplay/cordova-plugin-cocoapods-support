@@ -192,7 +192,7 @@ module.exports = function (context) {
             podfileContents.push('\t\t\tconfig.build_settings[\'EXPANDED_CODE_SIGN_IDENTITY\'] = ""');
             podfileContents.push('\t\t\tconfig.build_settings[\'CODE_SIGNING_REQUIRED\'] = "NO"');
             podfileContents.push('\t\t\tconfig.build_settings[\'CODE_SIGNING_ALLOWED\'] = "NO"');
-            podfileContents.push('\t\t\tconfig.build_settings[\'SWIFT_VERSION\'] = "3.0"');
+            podfileContents.push('\t\t\tconfig.build_settings[\'SWIFT_VERSION\'] = "4.0"');
             podfileContents.push('\t\tend');
             podfileContents.push('\tend');
             podfileContents.push('end');
