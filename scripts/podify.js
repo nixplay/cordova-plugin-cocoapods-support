@@ -184,12 +184,15 @@ module.exports = function (context) {
 
             //fixed cocoapod sign issue
             //https://michiganlabs.com/ios/development/2015/11/30/code-sign-error-building-cocoapods-framework-targets/
+            //force pod to swift 3.0
+            //https://github.com/Alamofire/Alamofire/issues/1526
             podfileContents.push('\npost_install do |installer|');
             podfileContents.push('\tinstaller.pods_project.targets.each do |target|');
             podfileContents.push('\t\ttarget.build_configurations.each do |config|');
             podfileContents.push('\t\t\tconfig.build_settings[\'EXPANDED_CODE_SIGN_IDENTITY\'] = ""');
             podfileContents.push('\t\t\tconfig.build_settings[\'CODE_SIGNING_REQUIRED\'] = "NO"');
             podfileContents.push('\t\t\tconfig.build_settings[\'CODE_SIGNING_ALLOWED\'] = "NO"');
+            podfileContents.push('\t\t\tconfig.build_settings[\'SWIFT_VERSION\'] = "3.0"');
             podfileContents.push('\t\tend');
             podfileContents.push('\tend');
             podfileContents.push('end');
